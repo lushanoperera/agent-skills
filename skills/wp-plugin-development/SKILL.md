@@ -1,7 +1,7 @@
 ---
 name: wp-plugin-development
-description: "Use when developing WordPress plugins: architecture and hooks, activation/deactivation/uninstall, admin UI and Settings API, data storage, cron/tasks, security (nonces/capabilities/sanitization/escaping), and release packaging."
-compatibility: "Targets WordPress 6.9+ (PHP 7.2.24+). Filesystem-based agent with bash + node. Some workflows require WP-CLI."
+description: Use when developing WordPress plugins or custom REST API endpoints: architecture and hooks, activation/deactivation/uninstall, admin UI and Settings API, REST routes/controllers/schema/authentication, data storage, cron/tasks, security (nonces/capabilities/sanitization/escaping), and release packaging.
+compatibility: Targets WordPress 6.9+ (PHP 7.2.24+). Filesystem-based agent with bash + node. Some workflows require WP-CLI.
 ---
 
 # WP Plugin Development
@@ -14,6 +14,10 @@ Use this skill for plugin work such as:
 - adding hooks/actions/filters
 - activation/deactivation/uninstall behavior and migrations
 - adding settings pages / options / admin UI (Settings API)
+- creating or updating REST routes/endpoints
+- adding custom fields/meta to REST responses
+- exposing custom post types or taxonomies via REST
+- debugging REST API 401/403/404 errors
 - security fixes (nonces, capabilities, sanitization/escaping, SQL safety)
 - packaging a release (build artifacts, readme, assets)
 
@@ -88,11 +92,35 @@ See:
 See:
 - `references/data-and-cron.md`
 
+### 6) REST API endpoints (if needed)
+
+For custom REST routes:
+
+- Use `register_rest_route()` on `rest_api_init` with unique namespace.
+- Always provide `permission_callback` — use `__return_true` for public endpoints.
+- Prefer a `WP_REST_Controller` subclass for non-trivial endpoints.
+- Define `args` with JSON Schema validation (`type`, `required`, `validate_callback`, `sanitize_callback`).
+- Never read `$_GET`/`$_POST` directly; use `WP_REST_Request`.
+- Use `register_rest_field` for computed fields; `register_meta` with `show_in_rest` for meta.
+
+For CPT/taxonomy REST exposure:
+- Use `show_in_rest => true` + `rest_base` in registration.
+
+See:
+- `references/routes-and-endpoints.md`
+- `references/schema.md`
+- `references/authentication.md`
+- `references/responses-and-fields.md`
+- `references/custom-content-types.md`
+- `references/discovery-and-params.md`
+
 ## Verification
 
 - Plugin activates with no fatals/notices.
 - Settings save and read correctly (capability + nonce enforced).
 - Uninstall removes intended data (and nothing else).
+- `/wp-json/` index includes your namespace.
+- Endpoint returns expected data; permission failures return 401/403.
 - Run repo lint/tests (PHPUnit/PHPCS if present) and any JS build steps if the plugin ships assets.
 
 ## Failure modes / debugging
@@ -103,6 +131,12 @@ See:
   - settings not registered, wrong option group, missing capability, nonce failure
 - Security regressions:
   - nonce present but missing capability checks; or sanitized input not escaped on output
+- 404 on REST route:
+  - `rest_api_init` not firing, route typo, or permalinks off (use `?rest_route=`).
+- 401/403 on REST endpoint:
+  - missing nonce/auth, or `permission_callback` too strict.
+- Missing REST fields:
+  - `show_in_rest` false, meta not registered, or CPT lacks `custom-fields` support.
 
 See:
 - `references/debugging.md`
