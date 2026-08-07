@@ -1,6 +1,7 @@
 ---
 name: wp-plugin-development
-description: Use when developing WordPress plugins or custom REST API endpoints: architecture and hooks, activation/deactivation/uninstall, admin UI and Settings API, REST routes/controllers/schema/authentication, data storage, cron/tasks, security (nonces/capabilities/sanitization/escaping), and release packaging.
+description: Use when developing WordPress plugins or REST API endpoints — hooks, activation/uninstall, admin UI, Settings API, REST routes/auth, data storage, cron, security (nonces/capabilities/sanitization), and release packaging.
+effort: medium
 compatibility: Targets WordPress 6.9+ (PHP 7.2.24+). Filesystem-based agent with bash + node. Some workflows require WP-CLI.
 ---
 

@@ -1,6 +1,7 @@
 ---
 name: wp-abilities-api
-description: Use when working with the WordPress Abilities API (wp_register_ability, wp_register_ability_category, /wp-json/wp-abilities/v1/*, @wordpress/abilities) including defining abilities, categories, meta, REST exposure, and permissions checks for clients.
+description: Use when working with the WordPress Abilities API — wp_register_ability, ability categories, /wp-json/wp-abilities/v1/*, @wordpress/abilities, meta, REST exposure, and permissions checks.
+effort: low
 compatibility: Targets WordPress 6.9+ (PHP 7.2.24+). Filesystem-based agent with bash + node. Some workflows require WP-CLI.
 ---
 
