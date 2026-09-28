@@ -23,7 +23,7 @@ Use this skill at the start of most WordPress tasks to:
 ## Procedure
 
 1. Run the project triage script:
-   - `node skills/wp-project-triage/scripts/detect_wp_project.mjs`
+   - `node ~/.claude/skills/wp-project-triage/scripts/detect_wp_project.mjs`
 2. Read the triage output and classify:
    - primary project kind(s),
    - tooling available (PHP/Composer, Node, @wordpress/scripts),
